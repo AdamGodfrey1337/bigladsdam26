@@ -96,6 +96,117 @@ export var PLACES = [
     price: "€6–12",
     desc: "Fries, shawarma, cheese and salad in one glorious tray. Invented in Rotterdam, perfected for nights like ours. James orders two."
   },
+  {
+    n: "WOWCRAB",
+    cat: "Eat",
+    type: "Seafood",
+    r: 4.3,
+    rev: 1247,
+    price: "€30–90",
+    desc: "Big messy seafood feasts tipped straight onto the table in a bag. Bibs on, phones down, get stuck in with your hands. Built for a group."
+  },
+  {
+    n: "BUNS",
+    cat: "Eat",
+    type: "Burgers",
+    r: 4.8,
+    rev: 73,
+    price: "€10–20",
+    desc: "A tiny spot turning out properly good burgers and loaded buns. Small menu, big flavours, in and out very happy."
+  },
+  {
+    n: "New York deli",
+    cat: "Eat",
+    type: "Deli",
+    r: 4.7,
+    rev: 265,
+    price: "€10–20",
+    desc: "Towering New York style sandwiches stacked with pastrami and the works. One of these might sort James out for an hour, maybe."
+  },
+  {
+    n: "Mojo Japanese Kitchen",
+    cat: "Eat",
+    type: "Japanese",
+    r: 4.2,
+    rev: 3905,
+    price: "€40–50",
+    desc: "A lively kitchen doing sushi, ramen and skewers off the grill. Sit at the counter and watch the whole thing happen."
+  },
+  {
+    n: "Miso Sushi",
+    cat: "Eat",
+    type: "Sushi",
+    r: 4.3,
+    rev: 1712,
+    price: "€30–50",
+    desc: "Generous sushi platters and a calm room to work through them. Good value for how much ends up landing on the table."
+  },
+  {
+    n: "Chun Café Spuistraat",
+    cat: "Eat",
+    type: "Bao buns",
+    r: 4.4,
+    rev: 1073,
+    price: "€10–20",
+    label: "Chun Café Spuistraat",
+    desc: "Fluffy steamed bao and crisp sandwiches done fast and cheerful. The Spuistraat branch, handy near the centre."
+  },
+  {
+    n: "Chun Café Berenstraat",
+    cat: "Eat",
+    type: "Bao buns",
+    r: 4.2,
+    rev: 3376,
+    price: "€10–20",
+    label: "Chun Café Berenstraat",
+    desc: "The Nine Streets branch of the bao and sandwich favourite. Grab one to go and eat it by the canal."
+  },
+  {
+    n: "Camino Taqueria",
+    cat: "Eat",
+    type: "Mexican",
+    r: 4.3,
+    rev: 569,
+    price: "€20–30",
+    desc: "Proper tacos and margaritas with a bit of buzz to the room. A solid shout when someone fancies something with a kick."
+  },
+  {
+    n: "De Aardige Pers",
+    cat: "Eat",
+    type: "Persian",
+    r: 4.4,
+    rev: 1652,
+    price: "€20–30",
+    desc: "Warm Persian cooking, big sharing plates and bread straight from the oven. Cosy and generous, easy to settle in for the night."
+  },
+  {
+    n: "Panificio Palesano",
+    cat: "Eat",
+    type: "Bakery",
+    r: 4.7,
+    rev: 95,
+    price: "€1–10",
+    desc: "A little Italian bakery doing focaccia and pastries that go quick. Cheap, brilliant, and perfect for a morning grab."
+  },
+  {
+    n: "Xiao Long Kan Hot Pot Amsterdam",
+    cat: "Eat",
+    type: "Hot pot",
+    r: 4.7,
+    rev: 204,
+    price: "€30–70",
+    label: "Xiao Long Kan Hot Pot",
+    desc: "Proper Sichuan hot pot, as fiery as you dare to order it. A long sweaty feast that turns dinner into a full event."
+  },
+  {
+    n: "Jollygood Coffee Shop",
+    cat: "Eat",
+    type: "Brunch",
+    r: 4.7,
+    rev: 53,
+    price: null,
+    desc: "A coffee and brunch spot, not that kind of coffeeshop. Strong flat whites and a feed to start the day right."
+  },
 
   // Drink
   {
@@ -169,6 +280,43 @@ export var PLACES = [
     rev: 1200,
     price: "€4–12",
     desc: "Arcade games and pinball with cold beer and fresh pizza. Settle the rankings here before anyone gets too cocky."
+  },
+  {
+    n: "Café 't Smalle",
+    cat: "Drink",
+    type: "Brown café",
+    r: 4.6,
+    rev: 1494,
+    price: "€10–20",
+    desc: "A classic brown café from 1786 with a tiny canal terrace everyone wants. Get there early and claim a spot by the water."
+  },
+  {
+    n: "Café De Deugniet",
+    cat: "Drink",
+    type: "Pub",
+    r: 4.4,
+    rev: 494,
+    price: "€10–50",
+    desc: "An easy going local pub for a few pints without any fuss. The kind of place where a quick one turns into a few."
+  },
+  {
+    n: "Stadscafé van Mechelen",
+    cat: "Drink",
+    type: "Gastropub",
+    r: 4.3,
+    rev: 1429,
+    price: "€10–30",
+    desc: "A roomy city café that does a proper plate of food alongside the beer. Good for when half the group wants to eat and half wants to drink."
+  },
+  {
+    n: "Lost in Amsterdam Lounge Cafe & Bar",
+    cat: "Drink",
+    type: "Cocktail bar",
+    r: 4.2,
+    rev: 4295,
+    price: "€10–30",
+    label: "Lost in Amsterdam",
+    desc: "A buzzy lounge bar for cocktails and a later one. Dim lights, a big list, and very easy to lose track of the time."
   },
 
   // Coffeeshops
@@ -339,6 +487,46 @@ export var PLACES = [
     rev: 900,
     price: null,
     desc: "A rambling record shop on the Utrechtsestraat, new and secondhand vinyl spread across several rooms. Easy to lose an hour in."
+  },
+  {
+    n: "VANS Store Amsterdam Kalverstraat",
+    cat: "Shops",
+    type: "Trainers",
+    r: 4.4,
+    rev: 312,
+    price: null,
+    label: "Vans Store",
+    desc: "The Vans shop on the main shopping drag. Handy if someone trashes their trainers on night one."
+  },
+  {
+    n: "OBEY Amsterdam",
+    cat: "Shops",
+    type: "Streetwear",
+    r: 4.4,
+    rev: 51,
+    price: null,
+    label: "OBEY",
+    desc: "Streetwear and graphic tees from the OBEY lot. A quick browse for anyone after a souvenir that is not a fridge magnet."
+  },
+  {
+    n: "Pop Trading Company Amsterdam",
+    cat: "Shops",
+    type: "Streetwear",
+    r: 4.7,
+    rev: 27,
+    price: null,
+    label: "Pop Trading Company",
+    desc: "A well loved Dutch skate and streetwear label with a tidy little store. Worth a look even just for the fit out."
+  },
+  {
+    n: "SMAAK Amsterdam",
+    cat: "Shops",
+    type: "Leather goods",
+    r: 4.1,
+    rev: 82,
+    price: null,
+    label: "SMAAK",
+    desc: "Handmade leather bags and wallets if anyone is feeling flush. The grown up souvenir option."
   },
 
   // See & Do
