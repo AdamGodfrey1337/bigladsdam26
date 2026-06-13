@@ -85,10 +85,10 @@
         <div class="section-head">
           <p class="eyebrow">Live from the canals</p>
           <h2 id="weather-h">Amsterdam weather</h2>
-          <p class="lead">Pulled live so you know what you are walking into. The packing note is for the trip itself, late March.</p>
+          <p class="lead">Live conditions right now, plus the outlook for our four days on the ground. The packing call updates itself from the numbers.</p>
         </div>
-        <div class="weather-card" id="weather" aria-live="polite">
-          <div class="weather-err">Loading the live forecast.</div>
+        <div class="weather" id="weather" aria-live="polite">
+          <div class="weather-loading">Loading the forecast for Amsterdam.</div>
         </div>
       </div>
     </section>
@@ -118,6 +118,7 @@
         </div>
 
         <div class="spots" id="spots"></div>
+        <div class="pager" id="pager" role="navigation" aria-label="Spot list pages"></div>
       </div>
     </section>
 

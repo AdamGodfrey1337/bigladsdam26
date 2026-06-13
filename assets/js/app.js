@@ -335,66 +335,189 @@ function wxInfo(code) {
   return WX_CODES[code] || { t: "Amsterdam weather", i: "🌤️" };
 }
 
+var WX_LAT = 52.3676, WX_LON = 4.9041;
+
+function rainIcon(r) {
+  if (r == null) return "⛅";
+  if (r >= 60) return "🌧️";
+  if (r >= 35) return "🌦️";
+  return "⛅";
+}
+
+// The four trip dates as ISO strings, derived from TRIP_DATE.
+function tripDateList() {
+  var y = TRIP_DATE.getUTCFullYear(), m = TRIP_DATE.getUTCMonth(), d = TRIP_DATE.getUTCDate();
+  var out = [];
+  for (var i = 0; i < DAYS.length; i++) {
+    var dt = new Date(Date.UTC(y, m, d + i));
+    out.push(dt.getUTCFullYear() + "-" + pad(dt.getUTCMonth() + 1) + "-" + pad(dt.getUTCDate()));
+  }
+  return out;
+}
+
 function initWeather() {
   var card = byId("weather");
   if (!card) return;
 
-  // The seasonal packing note is fixed to the trip, late March in Amsterdam.
-  var packNote =
-    'Late March in Amsterdam tends to run cold to mild, roughly 4 to 12 degrees, ' +
-    'often grey with a good chance of rain. Pack layers, a waterproof and comfy ' +
-    'shoes for the cobbles. One smart shirt between the four of us, optimistic at best.';
+  var defaultNote =
+    "Late March in Amsterdam tends to run cold to mild, often grey with a good " +
+    "chance of rain. Pack layers, a waterproof and comfy shoes for the cobbles. " +
+    "One smart shirt between the four of us, optimistic at best.";
 
-  var renderErr = function () {
-    card.innerHTML =
-      '<div class="weather-err">' +
-      'Could not reach the live forecast right now. The trip is late March though, so ' +
-      'pack for cold to mild and a fair chance of rain either way.' +
-      '</div>';
+  // Skeleton with two slots that fill independently.
+  card.innerHTML =
+    '<div class="weather-now" id="weather-now"><div class="weather-loading">Checking the sky over Amsterdam.</div></div>' +
+    '<div class="weather-trip">' +
+      '<div class="trip-head">Your four days <span class="trip-tag" id="trip-tag">loading</span></div>' +
+      '<div class="trip-days" id="trip-days"></div>' +
+    '</div>' +
+    '<div class="pack-note" id="pack-note"><b>Packing call.</b> ' + escAttr(defaultNote) + '</div>';
+
+  var nowEl = byId("weather-now");
+  var daysBox = byId("trip-days");
+  var tagEl = byId("trip-tag");
+  var noteEl = byId("pack-note");
+
+  var renderNowErr = function () {
+    if (nowEl) nowEl.innerHTML = '<div class="weather-err">Live conditions are not loading right now. The four day outlook below still holds.</div>';
   };
 
-  var url = "https://api.open-meteo.com/v1/forecast" +
-    "?latitude=52.3676&longitude=4.9041" +
-    "&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m" +
-    "&daily=temperature_2m_max,temperature_2m_min" +
-    "&timezone=Europe%2FAmsterdam";
-
-  if (typeof fetch !== "function") { renderErr(); return; }
-
-  fetch(url).then(function (res) {
-    if (!res.ok) throw new Error("weather http " + res.status);
-    return res.json();
-  }).then(function (data) {
-    var cur = data && data.current;
-    if (!cur) { renderErr(); return; }
-    var info = wxInfo(cur.weather_code);
-    var temp = Math.round(cur.temperature_2m);
-    var wind = Math.round(cur.wind_speed_10m);
-    var hum = Math.round(cur.relative_humidity_2m);
-
-    var hi = "", lo = "";
-    if (data.daily && data.daily.temperature_2m_max) {
-      hi = Math.round(data.daily.temperature_2m_max[0]);
-      lo = Math.round(data.daily.temperature_2m_min[0]);
+  var renderPackNote = function (days) {
+    if (!noteEl) return;
+    var note = defaultNote;
+    if (days && days.length) {
+      var his = [], los = [], rains = [];
+      for (var i = 0; i < days.length; i++) { his.push(days[i].hi); los.push(days[i].lo); rains.push(days[i].rain == null ? 0 : days[i].rain); }
+      var maxHi = Math.max.apply(null, his), minLo = Math.min.apply(null, los), maxRain = Math.max.apply(null, rains);
+      var wet = maxRain >= 50 ? "Rain looks likely, so a waterproof is not optional."
+        : maxRain >= 30 ? "Showers are on the cards, so pack a light waterproof."
+        : "Rain looks light, but Amsterdam can turn, so bring a jacket.";
+      note = "Looking at " + minLo + "° to " + maxHi + "° across the four days. " + wet +
+        " Layers, comfy shoes for the cobbles, and one smart shirt between the four of us, optimistic at best.";
     }
+    noteEl.innerHTML = '<b>Packing call.</b> ' + escAttr(note);
+  };
 
-    var rows =
-      '<div class="weather-rows">' +
-        (hi !== "" ? '<span>High <b>' + hi + '°</b></span><span>Low <b>' + lo + '°</b></span>' : '') +
-        '<span>Wind <b>' + wind + ' km/h</b></span>' +
-        '<span>Humidity <b>' + hum + '%</b></span>' +
-      '</div>';
+  var renderTrip = function (days, tag) {
+    if (tagEl) tagEl.textContent = tag;
+    if (daysBox) {
+      var html = "";
+      for (var i = 0; i < days.length; i++) {
+        var dd = days[i];
+        var ic = (dd.code != null) ? wxInfo(dd.code).i : rainIcon(dd.rain);
+        html += '<div class="trip-day">' +
+          '<div class="td-day">' + escAttr(dd.label) + '</div>' +
+          '<div class="td-date">' + escAttr(dd.date) + '</div>' +
+          '<div class="td-icon" aria-hidden="true">' + ic + '</div>' +
+          '<div class="td-temps"><span class="td-hi">' + dd.hi + '°</span> <span class="td-lo">' + dd.lo + '°</span></div>' +
+          (dd.rain != null ? '<div class="td-rain">' + dd.rain + '% rain</div>' : '') +
+        '</div>';
+      }
+      daysBox.innerHTML = html;
+    }
+    renderPackNote(days);
+  };
 
-    card.innerHTML =
+  var tripDates = tripDateList();
+  var dayLabel = function (i) { return DAYS[i] ? DAYS[i].key : ""; };
+  var dayDate = function (i) { return DAYS[i] ? DAYS[i].date : ""; };
+
+  // Always available fallback so the trip block shows something useful offline.
+  var typicalDays = function () {
+    var base = [{ hi: 11, lo: 4, rain: 45 }, { hi: 11, lo: 4, rain: 45 }, { hi: 12, lo: 5, rain: 40 }, { hi: 12, lo: 5, rain: 40 }];
+    var out = [];
+    for (var i = 0; i < DAYS.length; i++) {
+      out.push({ label: dayLabel(i), date: dayDate(i), hi: base[i].hi, lo: base[i].lo, rain: base[i].rain, code: null });
+    }
+    return out;
+  };
+
+  if (typeof fetch !== "function") {
+    renderNowErr();
+    renderTrip(typicalDays(), "Typical late March");
+    return;
+  }
+
+  // Current conditions.
+  var nowUrl = "https://api.open-meteo.com/v1/forecast?latitude=" + WX_LAT + "&longitude=" + WX_LON +
+    "&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&timezone=Europe%2FAmsterdam";
+  fetch(nowUrl).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (data) {
+    var cur = data && data.current;
+    if (!cur || cur.temperature_2m == null) { renderNowErr(); return; }
+    var info = wxInfo(cur.weather_code);
+    if (!nowEl) return;
+    nowEl.innerHTML =
       '<div class="weather-icon" aria-hidden="true">' + info.i + '</div>' +
       '<div>' +
-        '<div class="weather-temp">' + temp + '°<span style="font-size:0.5em;color:var(--muted)">C</span></div>' +
-        '<div class="weather-cond">' + escAttr(info.t) + ' in Amsterdam right now</div>' +
-        rows +
-        '<div class="pack-note"><b>Packing call.</b> ' + packNote + '</div>' +
+        '<div class="now-label">Right now in Amsterdam</div>' +
+        '<div class="weather-temp">' + Math.round(cur.temperature_2m) + '°<span style="font-size:0.5em;color:var(--muted)">C</span></div>' +
+        '<div class="weather-cond">' + escAttr(info.t) + '</div>' +
+        '<div class="weather-rows">' +
+          '<span>Wind <b>' + Math.round(cur.wind_speed_10m) + ' km/h</b></span>' +
+          '<span>Humidity <b>' + Math.round(cur.relative_humidity_2m) + '%</b></span>' +
+        '</div>' +
       '</div>';
+  }).catch(renderNowErr);
+
+  // Trip outlook: try a live forecast, then a historical average, then typical.
+  var tryForecast = function () {
+    var u = "https://api.open-meteo.com/v1/forecast?latitude=" + WX_LAT + "&longitude=" + WX_LON +
+      "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max" +
+      "&start_date=" + tripDates[0] + "&end_date=" + tripDates[tripDates.length - 1] + "&timezone=Europe%2FAmsterdam";
+    return fetch(u).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
+      if (!d || d.error || !d.daily || !d.daily.time) throw 0;
+      var t = d.daily.time, mx = d.daily.temperature_2m_max, mn = d.daily.temperature_2m_min,
+        wc = d.daily.weather_code, pp = d.daily.precipitation_probability_max || [];
+      var out = [];
+      for (var i = 0; i < tripDates.length; i++) {
+        var idx = t.indexOf(tripDates[i]);
+        if (idx < 0 || mx[idx] == null || mn[idx] == null) throw 0;
+        out.push({
+          label: dayLabel(i), date: dayDate(i),
+          hi: Math.round(mx[idx]), lo: Math.round(mn[idx]),
+          code: wc ? wc[idx] : null,
+          rain: (pp[idx] != null ? Math.round(pp[idx]) : null)
+        });
+      }
+      return out;
+    });
+  };
+
+  var tryClimatology = function () {
+    var ty = TRIP_DATE.getUTCFullYear();
+    var sY = ty - 10, eY = ty - 1;
+    var u = "https://archive-api.open-meteo.com/v1/archive?latitude=" + WX_LAT + "&longitude=" + WX_LON +
+      "&daily=temperature_2m_max,temperature_2m_min,precipitation_sum" +
+      "&start_date=" + sY + "-03-20&end_date=" + eY + "-03-29&timezone=Europe%2FAmsterdam";
+    return fetch(u).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
+      if (!d || !d.daily || !d.daily.time) throw 0;
+      var t = d.daily.time, mx = d.daily.temperature_2m_max, mn = d.daily.temperature_2m_min, ps = d.daily.precipitation_sum;
+      var doms = [];
+      for (var q = 0; q < tripDates.length; q++) { doms.push(parseInt(tripDates[q].slice(8, 10), 10)); }
+      var out = [];
+      for (var k = 0; k < doms.length; k++) {
+        var hiSum = 0, loSum = 0, n = 0, wet = 0;
+        for (var i = 0; i < t.length; i++) {
+          if (t[i].slice(5, 7) === "03" && parseInt(t[i].slice(8, 10), 10) === doms[k] && mx[i] != null && mn[i] != null) {
+            hiSum += mx[i]; loSum += mn[i]; n++;
+            if (ps && ps[i] != null && ps[i] >= 1) wet++;
+          }
+        }
+        if (n === 0) throw 0;
+        out.push({ label: dayLabel(k), date: dayDate(k), hi: Math.round(hiSum / n), lo: Math.round(loSum / n), rain: Math.round(100 * wet / n), code: null });
+      }
+      return out;
+    });
+  };
+
+  tryForecast().then(function (days) {
+    renderTrip(days, "Live forecast");
   }).catch(function () {
-    renderErr();
+    tryClimatology().then(function (days) {
+      renderTrip(days, "Typical, last 10 years");
+    }).catch(function () {
+      renderTrip(typicalDays(), "Typical late March");
+    });
   });
 }
 
@@ -402,9 +525,10 @@ function initWeather() {
 /* Spot list: search, filters, favourites, random pick, expand         */
 /* ------------------------------------------------------------------ */
 
-var listEl, countEl, filtersEl, searchInput;
-var state = { q: "", cat: "All" };
+var listEl, countEl, filtersEl, searchInput, pagerEl;
+var state = { q: "", cat: "All", page: 1 };
 var openSet = {};
+var PAGE_SIZE = 8;
 
 function filtered() {
   var q = state.q.trim().toLowerCase();
@@ -452,20 +576,39 @@ function rowHtml(p) {
     '</article>';
 }
 
+function renderPager(total, pageCount) {
+  if (!pagerEl) return;
+  if (pageCount <= 1) { pagerEl.innerHTML = ""; return; }
+  var p = state.page;
+  pagerEl.innerHTML =
+    '<button class="pager-btn" type="button" data-page="' + (p - 1) + '"' + (p <= 1 ? ' disabled' : '') + ' aria-label="Previous page">‹ Prev</button>' +
+    '<span class="pager-info">Page ' + p + ' of ' + pageCount + '</span>' +
+    '<button class="pager-btn" type="button" data-page="' + (p + 1) + '"' + (p >= pageCount ? ' disabled' : '') + ' aria-label="Next page">Next ›</button>';
+}
+
 function renderList() {
   if (!listEl) return;
   var arr = filtered();
+  var total = arr.length;
+  var pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  if (state.page > pageCount) state.page = pageCount;
+  if (state.page < 1) state.page = 1;
+
   if (countEl) {
     var favCount = Object.keys(favs).length;
-    countEl.textContent = arr.length + (arr.length === 1 ? " spot" : " spots") + " · " + favCount + " saved";
+    countEl.textContent = total + (total === 1 ? " spot" : " spots") + " · " + favCount + " saved";
   }
-  if (!arr.length) {
+  if (!total) {
     listEl.innerHTML = '<div class="empty">No spots match that. Try another word or clear the filters.</div>';
+    renderPager(0, 1);
     return;
   }
+  var start = (state.page - 1) * PAGE_SIZE;
+  var slice = arr.slice(start, start + PAGE_SIZE);
   var html = "";
-  for (var i = 0; i < arr.length; i++) { html += rowHtml(arr[i]); }
+  for (var i = 0; i < slice.length; i++) { html += rowHtml(slice[i]); }
   listEl.innerHTML = html;
+  renderPager(total, pageCount);
 }
 
 function syncFavButton(name) {
@@ -507,12 +650,25 @@ function onToggle(mainBtn) {
   if (willOpen) openSet[name] = true; else delete openSet[name];
 }
 
+function resetFilters() {
+  state.q = ""; state.cat = "All"; state.page = 1;
+  if (searchInput) searchInput.value = "";
+  if (filtersEl) {
+    var chips = filtersEl.querySelectorAll("[data-cat]");
+    for (var i = 0; i < chips.length; i++) {
+      chips[i].setAttribute("aria-pressed", chips[i].getAttribute("data-cat") === "All" ? "true" : "false");
+    }
+  }
+}
+
 function randomPick() {
   var arr = filtered();
-  if (!arr.length) arr = PLACES.slice();
+  if (!arr.length) { resetFilters(); arr = filtered(); }
   if (!arr.length) return;
-  var p = arr[Math.floor(Math.random() * arr.length)];
+  var idx = Math.floor(Math.random() * arr.length);
+  var p = arr[idx];
   openSet[p.n] = true;
+  state.page = Math.floor(idx / PAGE_SIZE) + 1;
   renderList();
   if (!listEl) return;
   var cards = listEl.querySelectorAll(".spot");
@@ -533,6 +689,7 @@ function initList() {
   countEl = byId("list-count");
   filtersEl = byId("filters");
   searchInput = byId("search-input");
+  pagerEl = byId("pager");
   var randomBtn = byId("random-btn");
   if (!listEl) return;
 
@@ -548,6 +705,7 @@ function initList() {
       var chip = e.target.closest("[data-cat]");
       if (!chip) return;
       state.cat = chip.getAttribute("data-cat");
+      state.page = 1;
       var chips = filtersEl.querySelectorAll("[data-cat]");
       for (var k = 0; k < chips.length; k++) {
         chips[k].setAttribute("aria-pressed", chips[k] === chip ? "true" : "false");
@@ -559,6 +717,7 @@ function initList() {
   if (searchInput) {
     searchInput.addEventListener("input", function () {
       state.q = searchInput.value || "";
+      state.page = 1;
       renderList();
     });
   }
@@ -575,6 +734,22 @@ function initList() {
     var main = e.target.closest(".spot-main");
     if (main) { onToggle(main); return; }
   });
+
+  if (pagerEl) {
+    pagerEl.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-page]");
+      if (!b || b.disabled) return;
+      var pg = parseInt(b.getAttribute("data-page"), 10);
+      if (isNaN(pg)) return;
+      state.page = pg;
+      renderList();
+      var sec = byId("spots-section");
+      if (sec) {
+        try { sec.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" }); }
+        catch (e2) { sec.scrollIntoView(); }
+      }
+    });
+  }
 
   renderList();
 }

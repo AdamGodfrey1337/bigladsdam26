@@ -332,7 +332,10 @@ section { padding: clamp(48px, 9vw, 96px) 0; }
 }
 
 /* ---------- Weather ---------- */
-.weather-card {
+.weather { display: grid; gap: 14px; }
+.weather-loading { color: var(--muted); font-size: 15px; padding: 8px 0; }
+
+.weather-now {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: clamp(16px, 4vw, 32px);
@@ -340,14 +343,22 @@ section { padding: clamp(48px, 9vw, 96px) 0; }
   background: linear-gradient(135deg, var(--panel), var(--panel-2));
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: clamp(20px, 4vw, 34px);
+  padding: clamp(20px, 4vw, 32px);
   box-shadow: var(--shadow);
 }
-.weather-icon { font-size: clamp(54px, 14vw, 88px); line-height: 1; }
+.now-label {
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 11px;
+  color: var(--orange-soft);
+  margin-bottom: 4px;
+}
+.weather-icon { font-size: clamp(54px, 14vw, 84px); line-height: 1; }
 .weather-temp {
   font-family: var(--display);
   font-weight: 800;
-  font-size: clamp(40px, 11vw, 68px);
+  font-size: clamp(40px, 11vw, 64px);
   line-height: 1;
 }
 .weather-cond { color: var(--muted); font-size: 16px; margin-top: 4px; }
@@ -361,12 +372,61 @@ section { padding: clamp(48px, 9vw, 96px) 0; }
   color: var(--muted);
 }
 .weather-rows b { color: var(--text); }
+
+.weather-trip {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(18px, 4vw, 26px);
+}
+.trip-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(22px, 5vw, 28px);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.trip-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--orange-soft);
+  background: rgba(255, 106, 19, 0.12);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.trip-days {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.trip-day {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 14px 8px;
+  text-align: center;
+}
+.td-day { font-family: var(--display); font-weight: 800; font-size: 20px; text-transform: uppercase; }
+.td-date { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; color: var(--muted-2); margin-bottom: 6px; }
+.td-icon { font-size: 34px; line-height: 1; margin: 4px 0; }
+.td-temps { font-size: 15px; }
+.td-hi { font-weight: 700; color: var(--text); }
+.td-lo { color: var(--muted); }
+.td-rain { font-family: var(--mono); font-size: 10px; color: var(--blue-soft); margin-top: 6px; }
+
 .pack-note {
-  margin-top: 18px;
-  border-top: 1px solid var(--line);
-  padding-top: 16px;
   color: var(--muted);
   font-size: 15px;
+  background: rgba(58, 134, 255, 0.08);
+  border: 1px solid rgba(58, 134, 255, 0.22);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
 }
 .pack-note b { color: var(--orange-soft); }
 .weather-err { color: var(--muted); font-size: 15px; }
@@ -547,6 +607,39 @@ section { padding: clamp(48px, 9vw, 96px) 0; }
   color: var(--muted);
   padding: 40px 0;
   font-family: var(--mono);
+}
+
+/* Pagination */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 18px;
+}
+.pager:empty { display: none; }
+.pager-btn {
+  appearance: none;
+  border: 1px solid var(--line-strong);
+  background: var(--panel);
+  color: var(--text);
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: 15px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  min-height: 44px;
+}
+.pager-btn:hover:not(:disabled) { background: var(--panel-2); border-color: var(--orange-soft); }
+.pager-btn:disabled { opacity: 0.4; cursor: default; }
+.pager-info {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 /* ---------- Planner ---------- */
@@ -817,6 +910,7 @@ section { padding: clamp(48px, 9vw, 96px) 0; }
   .strain-grid { grid-template-columns: 1fr 1fr; }
   .squad-grid { grid-template-columns: 1fr 1fr; }
   .days { grid-template-columns: 1fr 1fr; }
+  .trip-days { grid-template-columns: repeat(4, 1fr); }
 }
 @media (min-width: 920px) {
   .strain-grid { grid-template-columns: 1fr 1fr 1fr; }
