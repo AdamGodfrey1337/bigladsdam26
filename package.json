@@ -1,0 +1,15 @@
+{
+  "name": "amsterdam-big-lads",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Big Lads World Tour '26, a single page Amsterdam trip site.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}

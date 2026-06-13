@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0f24">
+  <title>Big Lads World Tour '26 · Amsterdam</title>
+  <meta name="description" content="Four lads, three nights, one Amsterdam. Countdown, live weather, the spots, a four day planner and a few in jokes for the Big Lads World Tour '26.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Big Lads World Tour '26">
+  <meta property="og:description" content="Four lads loose in Amsterdam, 23 to 26 March 2026. The countdown is on.">
+  <meta property="og:type" content="website">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <a class="skip" href="#spots-section">Skip to the spots</a>
+
+  <!-- Nav -->
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top">Big Lads <span class="xxx">XXX</span></a>
+      <nav class="nav-links" aria-label="Sections">
+        <a href="#countdown-section">Countdown</a>
+        <a href="#weather-section">Weather</a>
+        <a href="#spots-section">Spots</a>
+        <a href="#planner-section">Planner</a>
+        <a href="#strains-section">Strains</a>
+        <a href="#squad-section">Squad</a>
+      </nav>
+      <span class="nav-clock mono" aria-hidden="true"><span data-ams-clock>--:--:--</span> AMS</span>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <main id="top">
+    <section class="hero" aria-label="Intro">
+      <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
+      <div class="wrap hero-inner">
+        <p class="eyebrow hero-anim">23 to 26 March 2026 · Three nights</p>
+        <h1>
+          <span class="hero-anim">Big Lads</span><br>
+          <span class="line2 hero-anim">World Tour '26</span>
+        </h1>
+        <p class="hero-sub hero-anim">Amsterdam or bust</p>
+        <div class="hero-meta hero-anim">
+          <span><strong>Four lads.</strong> One city.</span>
+          <span><strong>Base:</strong> WestCord Fashion Hotel</span>
+          <span><strong>Mission:</strong> behave, mostly</span>
+        </div>
+        <div class="hero-cta hero-anim">
+          <a class="btn btn-primary" href="#countdown-section">See the countdown</a>
+          <a class="btn btn-ghost" href="#spots-section">Browse the spots</a>
+        </div>
+        <p class="hero-clock hero-anim">Right now in Amsterdam it is <b data-ams-clock>--:--:--</b></p>
+      </div>
+    </section>
+
+    <!-- Countdown -->
+    <section id="countdown-section" aria-labelledby="countdown-h">
+      <div class="wrap countdown reveal">
+        <div class="section-head">
+          <p class="eyebrow">Wheels up</p>
+          <h2 id="countdown-h">The countdown</h2>
+        </div>
+        <div class="cd-grid" id="cd-grid">
+          <div class="cd-cell"><div class="cd-num" id="cd-days">--</div><div class="cd-label">Days</div></div>
+          <div class="cd-cell"><div class="cd-num" id="cd-hours">--</div><div class="cd-label">Hours</div></div>
+          <div class="cd-cell"><div class="cd-num" id="cd-mins">--</div><div class="cd-label">Mins</div></div>
+          <div class="cd-cell"><div class="cd-num" id="cd-secs">--</div><div class="cd-label">Secs</div></div>
+        </div>
+        <p class="cd-sub">Early flight out of Manchester on the Monday, last one home on the Thursday night. Four full days on the ground.</p>
+      </div>
+    </section>
+
+    <!-- Weather -->
+    <section id="weather-section" aria-labelledby="weather-h">
+      <div class="wrap reveal">
+        <div class="section-head">
+          <p class="eyebrow">Live from the canals</p>
+          <h2 id="weather-h">Amsterdam weather</h2>
+          <p class="lead">Pulled live so you know what you are walking into. The packing note is for the trip itself, late March.</p>
+        </div>
+        <div class="weather-card" id="weather" aria-live="polite">
+          <div class="weather-err">Loading the live forecast.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spots -->
+    <section id="spots-section" aria-labelledby="spots-h">
+      <div class="wrap reveal">
+        <div class="section-head">
+          <p class="eyebrow">Where to go</p>
+          <h2 id="spots-h">The spots</h2>
+          <p class="lead">Eat, drink, coffeeshops, shops and the big sights. Search it, filter it, heart your favourites and tap any row for the lowdown. Saved spots flow into the planner below.</p>
+        </div>
+
+        <div class="toolbar">
+          <div class="search-row">
+            <div class="search">
+              <span class="mag" aria-hidden="true">⌕</span>
+              <input id="search-input" type="search" placeholder="Search spots, food, vibes" aria-label="Search the spots">
+            </div>
+            <button class="btn" id="random-btn" type="button">🎲 Surprise me</button>
+          </div>
+          <div class="filters" id="filters" role="group" aria-label="Filter by category"></div>
+        </div>
+
+        <div class="list-meta">
+          <span id="list-count">Loading spots</span>
+        </div>
+
+        <div class="spots" id="spots"></div>
+      </div>
+    </section>
+
+    <!-- Planner -->
+    <section id="planner-section" aria-labelledby="planner-h">
+      <div class="wrap reveal">
+        <div class="section-head">
+          <p class="eyebrow">Make it a plan</p>
+          <h2 id="planner-h">Four day planner</h2>
+          <p class="lead">Monday to Thursday. Heart spots above and drop them into a day, or let Auto plan spread your saved spots out for you. It all saves on this phone.</p>
+        </div>
+
+        <div class="planner-tools">
+          <button class="btn btn-primary" id="plan-auto" type="button">✨ Auto plan</button>
+          <button class="btn btn-ghost" id="plan-clear" type="button">Clear all</button>
+        </div>
+
+        <div class="pool">
+          <div class="pool-title">Saved, not planned yet</div>
+          <div class="pool-chips" id="plan-pool"></div>
+        </div>
+
+        <div class="days" id="plan-days"></div>
+      </div>
+    </section>
+
+    <!-- Strains -->
+    <section id="strains-section" aria-labelledby="strains-h">
+      <div class="wrap reveal">
+        <div class="section-head">
+          <p class="eyebrow">Know before you go</p>
+          <h2 id="strains-h">Coffeeshop guide</h2>
+          <p class="lead">A plain English rundown of the usual suspects so nobody orders blind.</p>
+        </div>
+        <p class="disclaimer">Heads up. This is a general reference, not a live menu. Stock changes shop to shop and day to day. Start low, go slow, and look after each other.</p>
+        <div class="strain-grid" id="strain-grid"></div>
+      </div>
+    </section>
+
+    <!-- James generator -->
+    <section id="james-section" aria-labelledby="james-h">
+      <div class="wrap reveal">
+        <div class="section-head">
+          <p class="eyebrow">Important research</p>
+          <h2 id="james-h">How much will James eat</h2>
+        </div>
+        <div class="james">
+          <span class="sign">Do not feed the James</span>
+          <p class="james-out" id="james-out" aria-live="polite"></p>
+          <button class="btn btn-primary" id="james-btn" type="button">Run the numbers</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Squad -->
+    <section id="squad-section" aria-labelledby="squad-h">
+      <div class="wrap reveal">
+        <div class="section-head">
+          <p class="eyebrow">The team sheet</p>
+          <h2 id="squad-h">The squad</h2>
+          <p class="lead">Four lads, four shirt numbers. One of them is a big lad for 14.</p>
+        </div>
+        <div class="squad-grid" id="squad-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="wrap reveal">
+      <div class="big">Big Lads <span class="xxx">XXX</span> '26</div>
+      <p>Amsterdam, 23 to 26 March 2026. Built for the lads by Adam. Be sound, drink water, mind James near the snacks.</p>
+      <small>Live weather by Open-Meteo. Favourites and the planner save on this device only. No data leaves your phone.</small>
+    </div>
+  </footer>
+
+  <!-- Libraries from CDN, loaded as globals before the module runs. Each is
+       guarded inside app.js, so the page still works if any fail to load. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+  <!-- The app. A native ES module that imports the data. -->
+  <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>
