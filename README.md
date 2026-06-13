@@ -15,6 +15,10 @@ Or skip npm entirely and open `index.html` through any static file server.
 
 Upload `index.html` and the `assets` folder to Hostinger as they are. There is no build step. If you want an optimised bundle instead, run `npm run build` and deploy the `dist` folder.
 
+### Vercel
+
+The repo ships a `vercel.json` that serves the site as static files straight from the root, with no build step. Import the repo into Vercel and it deploys the files as they are. The live weather still works because the visitor's browser calls Open-Meteo directly, and favourites and the planner keep using localStorage. If you would rather ship the optimised Vite bundle on Vercel, set the Build Command to `npm run build` and the Output Directory to `dist` in the project settings.
+
 ## Editing the spots
 
 All the data is in `assets/js/data.js`. Add a place by adding one object to the `PLACES` array. The shape and the rules are documented in `CLAUDE.md`, or use the `/add-place` command in Claude Code.

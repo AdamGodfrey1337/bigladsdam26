@@ -94,6 +94,7 @@ Before you consider a change finished:
 
 * Local dev: `npm install` then `npm run dev` for a live reloading server, or just open `index.html` through any static server.
 * Deploy: upload `index.html` and the `assets` folder to Hostinger as they are. No build needed.
+* Vercel: `vercel.json` deploys the site statically from the root with no build. Import the repo and it serves as is. To ship the optimised bundle on Vercel instead, set the build command to `npm run build` and the output directory to `dist`.
 * Optional optimised bundle: `npm run build` outputs to `dist`. You can deploy that instead, but it is not required.
 
 ## Quick verification
