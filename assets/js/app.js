@@ -62,6 +62,15 @@ function dirUrl(p) {
   return "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(p.n + " Amsterdam");
 }
 
+// Live menu link for coffeeshops. Menus change daily and are not baked into
+// the data, so this points at wherever the current menu actually lives. Set
+// an explicit "menu" url on a place to link straight to its DAM Live page or
+// Instagram, otherwise it falls back to a search that surfaces them.
+function menuUrl(p) {
+  if (p.menu) return p.menu;
+  return "https://www.google.com/search?q=" + encodeURIComponent(p.n + " Amsterdam coffeeshop menu");
+}
+
 // Place lookup by full name.
 var PLACE_BY_NAME = {};
 for (var pi = 0; pi < PLACES.length; pi++) { PLACE_BY_NAME[PLACES[pi].n] = PLACES[pi]; }
@@ -570,6 +579,7 @@ function rowHtml(p) {
         '<div class="spot-actions">' +
           '<a class="btn btn-ghost" href="' + escAttr(mapsUrl(p)) + '" target="_blank" rel="noopener">Open in Maps</a>' +
           '<a class="btn btn-ghost" href="' + escAttr(dirUrl(p)) + '" target="_blank" rel="noopener">Directions</a>' +
+          (p.cat === "Coffeeshops" ? '<a class="btn btn-ghost" href="' + escAttr(menuUrl(p)) + '" target="_blank" rel="noopener">See the live menu</a>' : '') +
           '<button class="btn btn-ghost" type="button" data-add="' + name + '">Add to planner</button>' +
         '</div>' +
       '</div>' +

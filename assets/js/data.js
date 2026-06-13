@@ -226,6 +226,63 @@ export var PLACES = [
     price: null,
     desc: "Small, calm and well run, a favourite with people who know the city. No frills, just a good quiet spot."
   },
+  {
+    n: "Coffeeshop Hashtag",
+    cat: "Coffeeshops",
+    type: "Coffeeshop",
+    r: 4.8,
+    rev: 372,
+    price: null,
+    desc: "One of Adam's saved picks and it shows in the reviews. A small modern shop, calm and friendly with a tidy menu. Tap the menu link for today's list."
+  },
+  {
+    n: "Coffeeshop Relax Amsterdam",
+    cat: "Coffeeshops",
+    type: "Coffeeshop",
+    r: 4.7,
+    rev: 779,
+    price: null,
+    label: "Coffeeshop Relax",
+    desc: "Right in the centre and exactly as relaxed as the name promises. Easy to drop into between the sights for a proper sit down."
+  },
+  {
+    n: "Coffeeshop Sativa Amsterdam",
+    cat: "Coffeeshops",
+    type: "Coffeeshop",
+    r: 4.8,
+    rev: 763,
+    price: null,
+    label: "Coffeeshop Sativa",
+    desc: "Top marks from the locals and a name that tells you the mood. Bright and upbeat, a safe bet for a daytime visit."
+  },
+  {
+    n: "Coffeeshop Bagheera",
+    cat: "Coffeeshops",
+    type: "Coffeeshop",
+    r: 4.5,
+    rev: 931,
+    price: null,
+    desc: "A long standing neighbourhood favourite with a steady following. Unfussy, welcoming and reliably good."
+  },
+  {
+    n: "Coffeeshop 137",
+    cat: "Coffeeshops",
+    type: "Coffeeshop",
+    r: 4.6,
+    rev: 971,
+    price: null,
+    desc: "A well rated local spot that keeps people coming back. Low key, friendly and easy to settle into."
+  },
+  {
+    n: "Tha Dogg House a Snoop Dogg Store",
+    cat: "Coffeeshops",
+    type: "Coffeeshop",
+    r: 4.9,
+    rev: 233,
+    price: null,
+    label: "Tha Dogg House",
+    desc: "The Snoop Dogg themed shop, as daft and fun as it sounds. Worth a look for the theme alone, and the reviews are sky high."
+  },
 
   // Shops
   {

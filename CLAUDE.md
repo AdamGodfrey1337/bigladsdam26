@@ -51,9 +51,12 @@ Everything lives in `data.js`. To add a spot, add one object to `PLACES`:
   rev: 1712,           // review count
   price: "€10–20",     // optional, null if unknown (en dash here is fine, it is Google data)
   label: "Short name", // optional, shown instead of n when the real name is long or noisy
+  menu: "https://...", // optional, coffeeshops only, a direct link to the current menu
   desc: "A sentence or two, no hyphens."  // shown when the row is expanded
 }
 ```
+
+Coffeeshops get a "See the live menu" button on the expanded row. Menus change daily and are never baked into the data, so the button links out to where the live menu actually lives. Set `menu` to point straight at a shop's DAM Live page or Instagram, or leave it off and it falls back to a search that surfaces the current menu.
 
 `display()` in `app.js` trims a trailing "Amsterdam ..." from `n` when there is no `label`, so most rows read cleanly without one. Add a `label` only when the name is long or has a suffix that looks bad.
 
